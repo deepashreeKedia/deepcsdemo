@@ -1,10 +1,6 @@
 package org.example.ws.service;
 
-import java.util.Collection;
 import java.util.List;
-
-import javax.persistence.EntityExistsException;
-import javax.persistence.NoResultException;
 
 import org.example.ws.AbstractTest;
 import org.example.ws.dto.RegisterBookRequest;
@@ -14,8 +10,10 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Unit test methods for the BookService.
@@ -31,7 +29,7 @@ public class BookServiceTest extends AbstractTest {
 
     @Before
     public void setUp() {
-
+        bookRepository.deleteAll();
     }
 
     @After
