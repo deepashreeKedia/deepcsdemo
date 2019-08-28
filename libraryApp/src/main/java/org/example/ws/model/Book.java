@@ -1,10 +1,11 @@
 package org.example.ws.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -15,15 +16,13 @@ public class Book {
     @Id
     private String id;
 
-    @NotBlank
+    @NotNull
     private String title;
 
-    @NotBlank
+    @NotNull
     private String author;
 
-    private String rentedBy;
-
-    private Date rentedOn;
+    private Date registeredOn;
 
     public Book() {
 
@@ -53,19 +52,12 @@ public class Book {
         this.author = author;
     }
 
-    public String getRentedBy() {
-        return rentedBy;
+
+    public Date getRegisteredOn() {
+        return registeredOn;
     }
 
-    public void setRentedBy(String rentedBy) {
-        this.rentedBy = rentedBy;
-    }
-
-    public Date getRentedOn() {
-        return rentedOn;
-    }
-
-    public void setRentedOn(Date rentedOn) {
-        this.rentedOn = rentedOn;
+    public void setRegisteredOn(Date registeredOn) {
+        this.registeredOn = registeredOn;
     }
 }

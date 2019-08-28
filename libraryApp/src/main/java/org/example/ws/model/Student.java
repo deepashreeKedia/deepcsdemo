@@ -1,10 +1,10 @@
 package org.example.ws.model;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 @Table(name = "student")
@@ -13,13 +13,13 @@ public class Student {
     @Id
     private String id;
 
-    @NotBlank
+    @NotNull
     private String name;
 
-    @NotBlank
+    @NotNull
     private String status;
 
-    private int noOfBooks;
+    private Date registeredOn;
 
     public Student() {
 
@@ -49,11 +49,11 @@ public class Student {
         this.status = status;
     }
 
-    public int getNoOfBooks() {
-        return noOfBooks;
+    public Date getRegisteredOn() {
+        return registeredOn;
     }
 
-    public void setNoOfBooks(int noOfBooks) {
-        this.noOfBooks = noOfBooks;
+    public void setRegisteredOn(Date registeredOn) {
+        this.registeredOn = registeredOn;
     }
 }

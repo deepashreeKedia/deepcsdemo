@@ -4,8 +4,10 @@ package org.example.ws.service;
 import org.example.ws.constant.AppConstant;
 import org.example.ws.dto.*;
 import org.example.ws.model.Book;
+import org.example.ws.model.Rent;
 import org.example.ws.model.Student;
 import org.example.ws.repository.BookRepository;
+import org.example.ws.repository.RentRepository;
 import org.example.ws.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,16 +26,21 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private RentRepository rentRepository;
+
     @Override
     public RegisterBookResponse registerBook(RegisterBookRequest registerBookRequest) {
 
         String bookId = UUID.randomUUID().toString();
 
 
+
         Book newBook = new Book();
         newBook.setAuthor(registerBookRequest.getAuthor());
         newBook.setTitle(registerBookRequest.getTitle());
         newBook.setId(bookId);
+        newBook.setRegisteredOn(new Date());
 
         Book registeredBook = bookRepository.save(newBook);
 
@@ -53,32 +60,33 @@ public class BookServiceImpl implements BookService {
         // check if user is valid and not blacklisted
 
         String studentId = rentBookRequest.getStudentId();
-        Optional<Student> student = studentRepository.findById(studentId);
-        if(student == null || !AppConstant.ACTIVE.equals(student.get().getStatus())) {
+        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+
+        Student student;
+        if(!optionalStudent.isPresent()) {
             throw new Exception("Student is not valid");
         }
-        // check if user has no more than 2 books rented
-        if(student.get().getNoOfBooks() == 2) {
-            throw new Exception("Student can not rent more than 2 books at a time");
-        }
-        // check if book title is available and not rented by anyone else
-        String bookId = rentBookRequest.getBookId();
-        Optional<Book> book = bookRepository.findById(bookId);
+        student = optionalStudent.get();
 
-        if(book == null || book.get().getRentedBy() != null) {
+        // check if book title is available
+        String bookId = rentBookRequest.getBookId();
+        Optional<Book> optionalBook = bookRepository.findById(bookId);
+        Book book;
+
+        if(!optionalBook.isPresent()) {
             throw new Exception("Book is not available currently to rent");
+        } else {
+            book = optionalBook.get();
         }
         // if above conditions are met, rent book success
 
-        synchronized (this) {
-            book.get().setRentedBy(studentId);
-            book.get().setRentedOn(new Date());
+        Rent rent = new Rent();
+        rent.setId(UUID.randomUUID().toString());
+        rent.setBook(book);
+        rent.setStudent(student);
+        rent.setRentedOn(new Date());
 
-            student.get().setNoOfBooks(student.get().getNoOfBooks() + 1);
-
-            bookRepository.save(book.get());
-            studentRepository.save(student.get());
-        }
+        rentRepository.save(rent);
     }
 
     @Override

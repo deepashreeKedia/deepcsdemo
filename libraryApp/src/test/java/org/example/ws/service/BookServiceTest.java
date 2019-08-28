@@ -31,7 +31,7 @@ public class BookServiceTest extends AbstractTest {
 
     @Before
     public void setUp() {
-        bookRepository.deleteAll();
+
     }
 
     @After
@@ -46,6 +46,7 @@ public class BookServiceTest extends AbstractTest {
         RegisterBookRequest request = new RegisterBookRequest();
         request.setAuthor("abc");
         request.setTitle("eragon");
+
         service.registerBook(request);
 
         List<Book> booklist = bookRepository.findAll();

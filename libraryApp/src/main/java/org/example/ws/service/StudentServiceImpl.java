@@ -8,6 +8,7 @@ import org.example.ws.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -28,6 +29,7 @@ public class StudentServiceImpl implements StudentService {
         newStudent.setId(studentId);
         newStudent.setName(registerStudentRequest.getName());
         newStudent.setStatus(AppConstant.ACTIVE);
+        newStudent.setRegisteredOn(new Date());
 
         Student student = studentRepository.save(newStudent);
 
@@ -35,7 +37,6 @@ public class StudentServiceImpl implements StudentService {
         RegisterStudentResponse response = new RegisterStudentResponse();
         response.setName(student.getName());
         response.setStudentId(student.getId());
-
 
         return response;
 
